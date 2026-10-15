@@ -1,655 +1,357 @@
 # 🚀 Unified Xebia Enterprise LMS Portal
 
-A full stack **Enterprise Learning Management System (LMS)** that brings **course management, assessments, grading, events, learning materials, and certification** into one unified platform.
+A full-stack **Enterprise Learning Management System (LMS)** that brings course management, assessments, grading, events, learning materials, and certification into one unified platform.
 
-The project integrates three functional areas into a single application:
+The project integrates three major functional areas:
 
-* 📚 **Learning & Course Management**
-* 📝 **Assessment & Evaluation**
-* 📅 **Event Management**
+- 📚 **Learning and Course Management**
+- 📝 **Assessment and Evaluation**
+- 📅 **Event Management**
 
-The platform provides **role based access** for Enterprise Administrators, Teachers, and Learners through a shared authentication system, unified dashboard, common navigation, and centralized backend services.
-
----
+The platform provides role-based workspaces for Enterprise Administrators, Teachers, and Learners through shared application navigation, authentication workflows, dashboards, and centralized backend services.
 
 ## ✨ Key Features
 
-### 🔐 Authentication & Role Based Access
+### 🔐 1. Authentication and Role-Based Access
 
-* Secure authentication with session based access
-* Role based navigation and permissions
-* Separate workspaces for:
+- User authentication and session-based access workflows
+- Role-specific dashboards and navigation
+- Separate workspaces for:
+  - 👨‍💼 Enterprise Administrators
+  - 👨‍🏫 Teachers and Instructors
+  - 👨‍🎓 Learners
+- Protected application routes
+- Shared navigation across integrated LMS modules
+- Role-specific access to application features
 
-  * 👨‍💼 Enterprise Admin
-  * 👨‍🏫 Teacher / Instructor
-  * 👨‍🎓 Learner
-* Protected application routes
-* Shared authentication across LMS modules
+### 📚 2. Course Management
 
-### 📚 Course Management
+- Create, view, update, and manage courses
+- Course enrollment workflows
+- Course details and learning content
+- Learning material management
+- Access to course resources
+- Learner-focused course dashboards
+- Course organization and learning progress tracking
 
-* Create and manage courses
-* Course enrollment
-* Course details and learning content
-* Learning material management
-* Material upload, download, and preview
-* Learner focused course dashboard
+### 📝 3. Assessment and Evaluation
 
-### 📝 Assessment & Evaluation
+- Assessment and question management
+- Assessment creation and organization
+- Learner assessment submissions
+- Teacher evaluation workflows
+- Structured grading processes
+- Assessment history and result tracking
+- Learner score management
 
-* Create and manage assessments
-* Question and assessment management
-* Learner submissions
-* Teacher evaluation
-* Automated / structured grading workflows
-* Assessment history and results
-* Score tracking
+### 📅 4. Event Management
 
-### 📅 Event Management
+- Create and manage organizational events
+- Display upcoming events
+- View event information and schedules
+- Event registration workflows
+- Track event registrations
+- Centralized event management for learning activities
 
-* Create and manage organizational events
-* Event registration
-* Upcoming event listings
-* Event details and schedules
-* Registration tracking
+### 📖 5. Learning Materials
 
-### 🏆 Certification
+- Organize and manage learning resources
+- Associate materials with learning activities
+- Access educational content
+- Support material upload, download, or preview where implemented
+- Provide learners with centralized learning resources
 
-* Course and assessment completion tracking
-* Certificate generation / management
-* Learner certification records
+### 🏆 6. Certification
 
-### 🎨 Modern Responsive UI
+- Track course and assessment completion
+- Maintain learner certification records
+- Organize certificate-related information
+- Support certificate management workflows
 
-* Responsive dashboard design
-* Role specific sidebar navigation
-* Reusable UI components
-* Modern Tailwind CSS styling
-* Desktop and mobile friendly layouts
-* Consistent design across all modules
+Automated certificate generation and verification can be extended as part of future development if not already implemented.
 
----
+### 🎨 7. Modern Responsive Interface
 
-# 🏗️ System Architecture
+- Responsive dashboard layouts
+- Role-specific sidebar navigation
+- Reusable UI components
+- Tailwind CSS styling
+- Desktop and mobile-friendly layouts
+- Consistent navigation across application modules
+- Interactive pages for learning and assessment workflows
+
+## 🏗️ System Architecture
+
+The application follows a full-stack architecture in which the frontend communicates with backend services through REST APIs.
 
 ```text
-                         ┌─────────────────────────┐
-                         │       Web Browser       │
-                         │   Next.js / React UI    │
-                         └────────────┬────────────┘
-                                      │
-                                      │ REST API
-                                      ▼
-                         ┌─────────────────────────┐
-                         │     Spring Boot API     │
-                         │       Java Backend      │
-                         └────────────┬────────────┘
-                                      │
-                    ┌─────────────────┴─────────────────┐
-                    │                                   │
-                    ▼                                   ▼
-          ┌───────────────────┐              ┌───────────────────┐
-          │      MongoDB      │              │      H2 / JPA     │
-          │ Document Storage  │              │ Relational Data   │
-          └───────────────────┘              └───────────────────┘
+                   ┌─────────────────────────┐
+                   │      Web Browser        │
+                   │  Next.js / React / TS   │
+                   └────────────┬────────────┘
+                                │
+                                │ HTTP / REST APIs
+                                ▼
+                   ┌─────────────────────────┐
+                   │     Spring Boot API     │
+                   │       Java Backend      │
+                   └────────────┬────────────┘
+                                │
+                   ┌────────────┴────────────┐
+                   │                         │
+                   ▼                         ▼
+        ┌───────────────────┐     ┌───────────────────┐
+        │      MongoDB       │     │      H2 / JPA     │
+        │ Document Database  │     │ Relational Data   │
+        └───────────────────┘     └───────────────────┘
 ```
+
+**Architecture overview:**
+
+- **Frontend:** Provides the user interface, dashboards, forms, and navigation.
+- **Backend:** Handles API requests, application logic, and data operations.
+- **MongoDB:** Supports document-oriented data storage for configured modules.
+- **H2 / JPA:** Supports relational persistence for configured modules and local development.
+- **REST APIs:** Connect the frontend with backend functionality.
+
+The actual database used by each feature depends on its backend implementation and configuration.
 
 ### Application Flow
 
 ```text
-User
- │
- ▼
-Authentication
- │
- ▼
-Role Identification
- │
- ├───────────────┬────────────────┐
- ▼               ▼                ▼
-Admin           Teacher          Learner
- │               │                │
- ▼               ▼                ▼
-Management      Teaching         Learning
- │               │                │
- └───────────────┴────────────────┘
-                 │
-                 ▼
-          Spring Boot REST API
-                 │
-                 ▼
-          Database Layer
+                    User
+                      │
+                      ▼
+               Authentication
+                      │
+                      ▼
+                Role Detection
+                      │
+          ┌───────────┼───────────┐
+          ▼           ▼           ▼
+        Admin       Teacher     Learner
+          │           │           │
+          ▼           ▼           ▼
+      Management   Teaching    Learning
+          │           │           │
+          └───────────┼───────────┘
+                      │
+                      ▼
+              Spring Boot REST API
+                      │
+                      ▼
+                Service Layer
+                      │
+                      ▼
+               Repository Layer
+                      │
+                      ▼
+                  Database
 ```
 
----
-
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```text
-LMS/
+XEBIA__LMS/
 │
 ├── .github/
-│   └── workflows/                 # CI/CD workflows
+│   └── workflows/                   # CI/CD workflows, if configured
 │
-├── Assessment-Portal/             # Legacy / reference module
+├── Assessment-Portal/               # Legacy / reference module
 │
-├── Xebia-LMS/                     # Main integrated application
+├── Xebia-LMS/                       # Main integrated application
 │   │
 │   ├── backend/
-│   │   ├── pom.xml                # Maven dependencies
+│   │   ├── pom.xml                  # Maven dependencies
+│   │   ├── mvnw                     # Maven wrapper (Unix)
+│   │   ├── mvnw.cmd                 # Maven wrapper (Windows)
 │   │   └── src/
-│   │       └── main/
-│   │           ├── java/
-│   │           │   ├── controllers/
-│   │           │   ├── services/
-│   │           │   ├── models/
-│   │           │   ├── repositories/
-│   │           │   ├── dto/
-│   │           │   └── config/
-│   │           │
-│   │           └── resources/
-│   │               └── application.properties
+│   │       ├── main/
+│   │       │   ├── java/            # Controllers, services, models
+│   │       │   └── resources/
+│   │       │       └── application.properties
+│   │       └── test/                # Backend tests
 │   │
 │   ├── public/
-│   │   └── assets/                # Static assets
+│   │   └── assets/                  # Static assets
 │   │
 │   ├── src/
-│   │   ├── app/                   # Next.js App Router
-│   │   │   ├── assessments/
-│   │   │   ├── courses/
-│   │   │   ├── events/
-│   │   │   ├── dashboard/
-│   │   │   └── ...
-│   │   │
-│   │   ├── components/
-│   │   │   ├── common/
-│   │   │   ├── dashboard/
-│   │   │   ├── assessments/
-│   │   │   ├── courses/
-│   │   │   └── events/
-│   │   │
-│   │   ├── lib/
-│   │   │   ├── api/
-│   │   │   └── context/
-│   │   │
-│   │   └── types/
+│   │   ├── app/                     # Next.js application routes
+│   │   ├── components/              # Reusable UI components
+│   │   ├── lib/                     # API clients and shared logic
+│   │   └── types/                   # TypeScript types
 │   │
-│   ├── package.json
-│   ├── next.config.mjs
-│   ├── tsconfig.json
+│   ├── package.json                 # Frontend dependencies
+│   ├── next.config.mjs              # Next.js configuration
+│   ├── tsconfig.json                # TypeScript configuration
 │   └── ...
 │
 ├── .gitignore
 └── README.md
 ```
 
----
+*Note: This is a high-level project structure. Individual directories and files may differ as development progresses.*
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
-| Layer            | Technology       |
-| ---------------- | ---------------- |
-| Frontend         | Next.js 16.2     |
-| UI Framework     | React            |
-| Language         | TypeScript       |
-| Styling          | Tailwind CSS     |
-| Backend          | Spring Boot 3    |
-| Backend Language | Java             |
-| Build Tool       | Maven            |
-| API              | REST             |
-| Database         | MongoDB          |
-| Relational Layer | JPA / H2         |
-| Authentication   | NextAuth         |
-| Version Control  | Git & GitHub     |
-| Deployment       | Vercel / Railway |
-| Development      | VS Code          |
+| Layer | Technology |
+|---|---|
+| Frontend Framework | Next.js |
+| UI Library | React |
+| Programming Language | TypeScript / JavaScript |
+| Styling | Tailwind CSS |
+| Backend Framework | Spring Boot 2.7.18 |
+| Backend Language | Java |
+| Build Tool | Maven |
+| API Architecture | REST |
+| Document Database | MongoDB |
+| Relational Persistence | JPA / H2 |
+| Version Control | Git and GitHub |
+| Frontend Deployment | Vercel |
+| Backend Deployment | Railway |
+| Development Environment | Visual Studio Code |
 
----
+**Version note:** The backend version above reflects the previously inspected Maven configuration. Check `pom.xml` and `package.json` before documenting different versions or adding authentication frameworks as dependencies.
 
-# 🔌 Backend API
+## 🔌 Backend API
 
-The backend follows a RESTful architecture and exposes APIs for the major application modules.
+The backend exposes REST endpoints under the `/api` context path, according to the current application configuration.
 
-### Authentication
+The following are logical API areas. Confirm the actual controller mappings before assuming every endpoint is available.
 
-```text
-/api/auth
-```
+| Module | Example API Prefix | Purpose |
+|---|---|---|
+| Authentication | `/api/auth` | Authentication and user-related operations |
+| Courses | `/api/courses` | Course management |
+| Assessments | `/api/assessments` | Assessment management |
+| Submissions | `/api/submissions` | Learner submissions and evaluation |
+| Events | `/api/events` | Event management and registration |
+| Materials | `/api/materials` | Learning material management |
+| Users | `/api/users` | User administration, if implemented |
+| Certificates | `/api/certificates` | Certification workflows, if implemented |
 
-Handles authentication and user related operations.
-
-### Assessments
-
-```text
-/api/assessments
-```
-
-Provides assessment creation, retrieval, management, and evaluation functionality.
-
-### Submissions
+### API Request Flow
 
 ```text
-/api/submissions
+Frontend Component
+        │
+        ▼
+     API Client
+        │
+        ▼
+Spring Boot Controller
+        │
+        ▼
+   Service Layer
+        │
+        ▼
+ Repository / Data Access
+        │
+        ▼
+      Database
+        │
+        ▼
+   API Response
+        │
+        ▼
+Frontend UI Update
 ```
 
-Handles learner assessment submissions and evaluation data.
+## 👥 User Roles
 
-### Events
+### 👨‍💼 Enterprise Administrator
 
-```text
-/api/events
-```
+The administrator workspace is intended for organizational management activities, including:
 
-Provides event creation, retrieval, registration, and management operations.
+- Manage users and application roles
+- Manage courses and learning resources
+- Coordinate teachers and learners
+- Create and manage events
+- Manage assessments where authorized
+- Monitor learning activities
+- Maintain organizational learning workflows
 
-### Materials
+### 👨‍🏫 Teacher / Instructor
 
-```text
-/api/materials
-```
+The teacher workspace is intended for teaching and evaluation activities, including:
 
-Handles course learning materials and associated resources.
+- Manage assigned courses
+- Create and organize assessments
+- Manage assessment questions
+- Review learner submissions
+- Evaluate assessments and record scores
+- Track learner performance
+- Manage learning materials
 
----
+### 👨‍🎓 Learner
 
-# 👥 User Roles
+The learner workspace is intended to support the learning journey, including:
 
-## 👨‍💼 Enterprise Administrator
+- Browse available courses
+- Enroll in courses where supported
+- Access learning materials
+- View upcoming events
+- Register for events where supported
+- Take assessments
+- Submit answers
+- View results and scores
+- Track learning progress
+- Access available certificates
 
-Administrators can:
+*The exact permissions available to each role depend on the implemented frontend and backend authorization rules.*
 
-* Manage users
-* Manage courses
-* Manage teachers and learners
-* Create and manage events
-* Manage assessments
-* Monitor platform activity
-* Manage organizational learning resources
+## ⚙️ Local Development Setup
 
-## 👨‍🏫 Teacher / Instructor
+### Prerequisites
 
-Teachers can:
+Install the following tools:
 
-* Manage assigned courses
-* Create assessments
-* Manage questions
-* Review learner submissions
-* Evaluate assessments
-* Track learner performance
-* Manage course materials
+- Git
+- Java Development Kit compatible with the backend
+- Node.js and npm
+- A terminal such as PowerShell
+- Visual Studio Code or another code editor
 
-## 👨‍🎓 Learner
+The existing backend configuration was previously observed to use Spring Boot 2.7.18, which supports Java 8. Use the Java version compatible with your actual `pom.xml`.
 
-Learners can:
+Verify your installations:
 
-* Browse available courses
-* Enroll in courses
-* Access learning materials
-* Attend / register for events
-* Take assessments
-* Submit answers
-* View scores and results
-* Track learning progress
-* Access certificates
-
----
-
-# 🔑 Demo Credentials
-
-For local development and demonstration:
-
-| Role             | Username / Email     | Password     |
-| ---------------- | -------------------- | ------------ |
-| Enterprise Admin | `admin@xebia.com`    | `admin123`   |
-| Learner          | `learner@xebia.com`  | `learner123` |
-| Teacher          | Create through Admin | Configurable |
-
-> ⚠️ These credentials are intended only for local/demo environments. Do not use default credentials in production.
-
----
-
-# ⚙️ Local Development Setup
-
-## Prerequisites
-
-Make sure the following are installed:
-
-* **Java JDK 17+**
-* **Node.js 18+**
-* **npm**
-* **MongoDB** or MongoDB Atlas
-* **Git**
-
-Verify the installations:
-
-```bash
+```powershell
 java -version
 node -v
 npm -v
 git --version
 ```
 
----
+### 1. Clone the Repository
 
-# 🚀 Running the Backend
+If you have not already cloned the repository:
 
-### 1. Navigate to the backend
-
-```bash
-cd Xebia-LMS/backend
+```powershell
+git clone https://github.com/akreddiee/XEBIA__LMS.git
+cd XEBIA__LMS
 ```
 
-### 2. Configure MongoDB
+If the project is already on your computer, open the existing repository directory instead.
 
-Open:
+### 2. Configure the Backend
+
+Navigate to the backend directory:
+
+```powershell
+cd Xebia-LMS\backend
+```
+
+Open the following configuration file:
 
 ```text
 src/main/resources/application.properties
 ```
 
-Configure your MongoDB connection:
+Review the database configuration before changing anything.
 
-```properties
-spring.data.mongodb.uri=mongodb://localhost:27017/employeeDB
-```
+The current local configuration has been observed to use an in-memory H2 database and an embedded MongoDB setup. If your application relies on embedded MongoDB, you may not need to install MongoDB separately.
 
-For MongoDB Atlas, use your Atlas connection string instead.
+If you switch to a local MongoDB server or MongoDB Atlas, configure the appropriate URI and credentials for the modules that use MongoDB.
 
-### 3. Start Spring Boot
-
-Windows:
-
-```bash
-.\mvnw.cmd spring-boot:run
-```
-
-Or, if Maven is installed globally:
-
-```bash
-mvn spring-boot:run
-```
-
-The backend will start on the configured Spring Boot port.
-
----
-
-# 💻 Running the Frontend
-
-Open a new terminal.
-
-### 1. Navigate to the frontend
-
-```bash
-cd Xebia-LMS
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Start the development server
-
-```bash
-npm run dev
-```
-
-Open:
-
-```text
-http://localhost:3000
-```
-
----
-
-# 🧪 Production Build Verification
-
-Before deployment, verify that both applications build successfully.
-
-## Frontend
-
-```bash
-cd Xebia-LMS
-npm run build
-```
-
-Start the production build:
-
-```bash
-npm start
-```
-
-## Backend
-
-```bash
-cd Xebia-LMS/backend
-.\mvnw.cmd clean package -DskipTests
-```
-
-The generated JAR will be available inside:
-
-```text
-backend/target/
-```
-
----
-
-# 🔄 Development Workflow
-
-```text
-1. Create / modify feature
-        ↓
-2. Implement frontend UI
-        ↓
-3. Connect REST API
-        ↓
-4. Implement / update backend service
-        ↓
-5. Connect database
-        ↓
-6. Test API using Postman
-        ↓
-7. Test complete user workflow
-        ↓
-8. Run production builds
-        ↓
-9. Commit changes
-        ↓
-10. Push to GitHub
-```
-
----
-
-# 🧪 API Testing
-
-REST APIs can be tested using tools such as **Postman**.
-
-Typical testing workflow:
-
-```text
-Frontend Request
-      ↓
-Spring Boot Controller
-      ↓
-Service Layer
-      ↓
-Repository
-      ↓
-MongoDB / H2
-      ↓
-Response
-      ↓
-Frontend
-```
-
-API testing should cover:
-
-* Authentication
-* Course operations
-* Assessment operations
-* Submission workflows
-* Event registration
-* Learning materials
-* Role based access
-* Error handling
-
----
-
-# 🔐 Security Considerations
-
-The application is designed with role based access and protected application workflows.
-
-Recommended production practices include:
-
-* Store secrets in environment variables
-* Never commit database credentials
-* Never commit API keys
-* Replace demo passwords before deployment
-* Configure secure authentication secrets
-* Enable HTTPS
-* Configure CORS appropriately
-* Validate and sanitize API input
-* Apply authorization at backend endpoints
-* Use production MongoDB credentials with restricted permissions
-
-Example:
-
-```env
-MONGODB_URI=your_mongodb_connection_string
-AUTH_SECRET=your_secure_secret
-```
-
-> `.env` files containing secrets should be excluded through `.gitignore`.
-
----
-
-# 🌐 Deployment Architecture
-
-A possible production deployment structure is:
-
-```text
-                    GitHub Repository
-                           │
-             ┌─────────────┴─────────────┐
-             │                           │
-             ▼                           ▼
-       Vercel                        Railway
-       Frontend                      Backend
-       Next.js                      Spring Boot
-             │                           │
-             └─────────────┬─────────────┘
-                           │
-                           ▼
-                    MongoDB Atlas
-```
-
-### Frontend
-
-The Next.js application can be deployed using platforms such as Vercel.
-
-### Backend
-
-The Spring Boot API can be deployed using Railway or another Java compatible hosting platform.
-
-### Database
-
-MongoDB Atlas can provide the production database layer.
-
----
-
-# 📊 Major Modules
-
-| Module          | Description                                |
-| --------------- | ------------------------------------------ |
-| Authentication  | Login, sessions and role based access      |
-| Dashboard       | Role specific application workspace        |
-| Courses         | Course creation, enrollment and management |
-| Materials       | Learning resource management               |
-| Assessments     | Tests, questions and evaluation            |
-| Submissions     | Learner submission and grading             |
-| Events          | Event creation and registration            |
-| Certificates    | Completion and certification               |
-| User Management | User and role administration               |
-
----
-
-# 🎯 Project Objectives
-
-The Unified Xebia Enterprise LMS Portal was developed to provide:
-
-* A centralized corporate learning platform
-* Unified authentication across modules
-* Role based application workflows
-* Digital course management
-* Structured assessment and evaluation
-* Event management
-* Learning material distribution
-* Learner progress tracking
-* Certification management
-* Scalable REST based backend architecture
-
----
-
-# 🔮 Future Enhancements
-
-Potential future improvements include:
-
-* 📈 Advanced analytics dashboard
-* 🤖 AI assisted assessment evaluation
-* 💬 AI learning assistant
-* 🔔 Real time notifications
-* 📱 Progressive Web App support
-* 📊 Advanced learner performance analytics
-* 🏆 Gamification and achievement badges
-* 📄 Automated certificate generation
-* 🔍 Advanced course search and filtering
-* ☁️ Cloud optimized deployment
-* 🔐 OAuth / enterprise SSO integration
-* 📦 Docker based deployment
-* ⚡ Redis caching
-* 🧪 Automated unit and integration testing
-
----
-
-# 📌 Project Status
-
-**Status:** Active Development
-
-The repository contains the integrated LMS application combining learning, assessment, and event management capabilities into a unified full stack platform.
-
----
-
-# 👨‍💻 Development
-
-This project demonstrates full stack application development involving:
-
-```text
-Frontend Development
-        +
-REST API Development
-        +
-Database Integration
-        +
-Authentication
-        +
-Role Based Access
-        +
-API Testing
-        +
-Deployment
-```
-
----
-
-# 📜 License
-
-This project is intended for **educational, internship, and demonstration purposes** unless otherwise specified by the project owner or organization.
-
----
-
-## ⭐ Acknowledgements
-
-Developed as part of the **Xebia internship / academic project work**, combining enterprise learning workflows with modern full stack web technologies.
-
----
+**Security:**
