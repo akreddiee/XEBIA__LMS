@@ -354,4 +354,298 @@ The current local configuration has been observed to use an in-memory H2 databas
 
 If you switch to a local MongoDB server or MongoDB Atlas, configure the appropriate URI and credentials for the modules that use MongoDB.
 
-**Security:**
+**Security:** Never commit database passwords, API keys, or production secrets to GitHub.
+
+### 3. Start the Backend
+
+On Windows, run:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Wait for the Spring Boot startup message, such as:
+
+```text
+Started ...Application
+```
+
+Keep the terminal open while the backend is running.
+
+The configured port is `8080` by default, and the API context path is `/api`.
+
+Example base URL:
+
+```text
+http://localhost:8080/api
+```
+
+An HTTP error for an API root URL does not necessarily mean the server is down; individual endpoints may be required.
+
+### 4. Start the Frontend
+
+Open a **second terminal** in Visual Studio Code.
+
+Navigate to the frontend project directory:
+
+```powershell
+cd C:\Users\kotir\XEBIA__LMS\Xebia-LMS
+```
+
+If your repository is stored elsewhere, replace this path with your actual location.
+
+Install dependencies:
+
+```powershell
+npm install
+```
+
+Start the development server:
+
+```powershell
+npm run dev
+```
+
+Open the application in your browser:
+
+**http://localhost:3000**
+
+Keep both terminals running while using the application.
+
+### 5. Frontend and Backend Configuration
+
+The frontend has previously been observed to use `http://localhost:8080/api` as its default API base URL.
+
+If API requests fail, check:
+
+- The backend is running on the expected port.
+- The frontend is using the correct API base URL.
+- Required environment variables are configured.
+- CORS settings permit the frontend origin where necessary.
+- The requested backend endpoint actually exists.
+- The application is not unintentionally using mock API mode.
+
+Review the frontend configuration and API client before changing environment variables.
+
+## 🧪 Testing and Quality Assurance
+
+Testing helps verify that application modules work together correctly.
+
+### API Testing
+
+Use Postman or another API client to test implemented endpoints.
+
+Recommended test scenarios include:
+
+- Authentication success and failure
+- Course creation and retrieval
+- Course enrollment
+- Assessment creation and retrieval
+- Learner submissions
+- Evaluation and score recording
+- Event creation and registration
+- Learning material access
+- Authorization and role permissions
+- Invalid inputs and error handling
+
+### Backend Tests
+
+From the backend directory, run:
+
+```powershell
+.\mvnw.cmd test
+```
+
+To package the backend without executing tests:
+
+```powershell
+.\mvnw.cmd clean package -DskipTests
+```
+
+Skipping tests is useful for a quick package check, but it does not replace a full test run.
+
+### Frontend Build
+
+From the `Xebia-LMS` directory, run:
+
+```powershell
+npm run build
+```
+
+If the build succeeds, start the production server with:
+
+```powershell
+npm start
+```
+
+Use the development server (`npm run dev`) for normal local development.
+
+## 🔐 Security Considerations
+
+Production deployments should implement and verify the following practices:
+
+- Enforce authentication and authorization on the backend.
+- Validate user permissions on every protected API operation.
+- Store secrets in environment variables or a secure secret manager.
+- Avoid hardcoded production credentials.
+- Replace demonstration credentials before deployment.
+- Configure HTTPS for production.
+- Restrict CORS to trusted origins.
+- Validate and sanitize incoming data.
+- Use secure session handling and appropriate cookie settings.
+- Apply database access controls and least-privilege permissions.
+- Avoid exposing database administration consoles publicly.
+- Keep dependencies updated and scan for known vulnerabilities.
+
+**Important:** Hiding a page or navigation item in the frontend is not sufficient authorization. The backend must enforce permissions independently.
+
+## 🚀 Deployment Architecture
+
+A possible deployment architecture is:
+
+```text
+                  GitHub Repository
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+              ▼                     ▼
+           Vercel                Railway
+      Next.js Frontend       Spring Boot API
+              │                     │
+              └──────────┬──────────┘
+                         │
+                         ▼
+                   MongoDB Atlas
+```
+
+### Frontend Deployment
+
+The Next.js frontend can be deployed to Vercel or another compatible hosting platform.
+
+Configure the production API URL and other required environment variables through the hosting platform's settings.
+
+### Backend Deployment
+
+The Spring Boot backend can be deployed to Railway or another Java-compatible hosting service.
+
+Configure the required database connections, port, secrets, and deployment settings for the hosting environment.
+
+### Database Deployment
+
+MongoDB Atlas can provide hosted MongoDB storage for modules that use MongoDB.
+
+Relational persistence should also be configured appropriately if the application depends on JPA or H2. An in-memory H2 database is not a persistent production database.
+
+Before deployment, verify that all services can communicate securely and that frontend API URLs point to the deployed backend rather than `localhost`.
+
+## 📊 Major Modules
+
+| Module | Purpose |
+|---|---|
+| Authentication | User access and session workflows |
+| Dashboard | Role-specific workspace |
+| Courses | Course creation, enrollment, and management |
+| Learning Materials | Educational resource management |
+| Assessments | Assessment and question management |
+| Submissions | Learner submission and evaluation workflows |
+| Events | Event creation and registration |
+| Certification | Certificate-related workflows |
+| User Management | User and role administration |
+| Reporting | Learning and assessment insights, where implemented |
+
+## 🎯 Project Objectives
+
+The Unified Xebia Enterprise LMS Portal aims to:
+
+- Centralize enterprise learning activities in one application.
+- Integrate course, assessment, and event management.
+- Provide role-specific workflows for administrators, teachers, and learners.
+- Simplify access to educational resources.
+- Support structured assessment and evaluation.
+- Track learner performance and learning progress.
+- Provide a foundation for certification management.
+- Connect frontend workflows to backend REST APIs.
+- Demonstrate full-stack application development and integration.
+
+## 🔮 Future Enhancements
+
+Potential improvements include:
+
+- 📈 Advanced analytics dashboards
+- 🤖 AI-assisted assessment evaluation
+- 💬 An AI-powered learning assistant
+- 🔔 Real-time notifications
+- 📱 Progressive Web App support
+- 📊 Detailed learner performance analytics
+- 🏆 Gamification and achievement badges
+- 📄 Automated certificate generation with verification
+- 🔍 Advanced course search and filtering
+- ☁️ Cloud-optimized deployment
+- 🔐 OAuth 2.0 and enterprise single sign-on
+- 📦 Docker and container-based deployment
+- ⚡ Redis caching where appropriate
+- 🧪 Expanded unit, integration, and end-to-end testing
+- 📋 Audit logs and administrative activity tracking
+- ♿ Accessibility improvements
+
+## 🔄 Development Workflow
+
+```text
+1. Plan the feature
+        ↓
+2. Implement the frontend
+        ↓
+3. Develop or update REST APIs
+        ↓
+4. Integrate the database
+        ↓
+5. Connect frontend and backend
+        ↓
+6. Test API endpoints
+        ↓
+7. Validate end-to-end workflows
+        ↓
+8. Run backend tests and frontend builds
+        ↓
+9. Review and commit changes
+        ↓
+10. Push to GitHub and deploy
+```
+
+## 👨‍💻 Skills Demonstrated
+
+This project provides experience with:
+
+- Frontend development using Next.js and React
+- REST API integration
+- Java and Spring Boot backend development
+- Database integration
+- Authentication and role-based access control
+- Reusable UI components
+- API testing and debugging
+- Git and GitHub collaboration
+- Build verification and deployment workflows
+- Full-stack application development
+
+## 📌 Project Status
+
+**Status:** Active Development
+
+The repository contains the integrated LMS application, with a focus on combining learning management, assessments, and event-related workflows in a unified platform.
+
+Feature availability and production readiness should be evaluated against the current implementation before each release.
+
+## 📜 License
+
+This project is intended for educational, internship, and demonstration purposes, subject to the licensing terms of the repository and its dependencies.
+
+Add a specific open-source license only after confirming that you have permission to distribute the project under those terms.
+
+## 🙏 Acknowledgements
+
+Developed as part of the Xebia internship and academic project work, with the goal of integrating enterprise learning workflows into a unified full-stack platform.
+
+---
+
+**Unified Xebia Enterprise LMS Portal**  
+*One platform for learning, assessment, and enterprise learning activities.*
