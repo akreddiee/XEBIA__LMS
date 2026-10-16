@@ -190,3 +190,101 @@ export interface EventRegistrationResponse {
   registrationTime: string;
   status: string;
 }
+
+export type NotificationCategory =
+  | "GENERAL"
+  | "ASSESSMENTS"
+  | "COURSES"
+  | "EVENTS"
+  | "GRADES"
+  | "CERTIFICATES"
+  | "VERIFICATION";
+
+export type NotificationPriority = "URGENT" | "WARNING" | "INFO" | "SUCCESS";
+
+export interface NotificationItem {
+  id: string;
+  recipientId?: string;
+  recipientRole?: string;
+  title: string;
+  message: string;
+  category: NotificationCategory;
+  priority: NotificationPriority;
+  read: boolean;
+  actionUrl?: string;
+  createdAt: string;
+  metadata?: Record<string, any>;
+}
+
+export interface NotificationFilter {
+  status?: "all" | "unread" | "read";
+  category?: string;
+  priority?: string;
+  page?: number;
+  size?: number;
+}
+
+export interface NotificationListResponse {
+  items: NotificationItem[];
+  total: number;
+  unreadCount: number;
+  page: number;
+  totalPages: number;
+}
+
+export type VerificationStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+export type VerificationRequestType =
+  | "CERTIFICATE_VERIFICATION"
+  | "LEARNER_CREDENTIAL"
+  | "COURSE_EXEMPTION"
+  | "IDENTITY_VERIFICATION";
+
+export interface VerificationStatusHistory {
+  timestamp: string;
+  changedBy: string;
+  fromStatus?: string | null;
+  toStatus: string;
+  remarks?: string;
+}
+
+export interface VerificationRequestItem {
+  id: string;
+  requesterId?: string;
+  requesterName: string;
+  requesterEmail?: string;
+  requesterRole?: string;
+  requestType: VerificationRequestType;
+  certificateId?: string;
+  targetCourseOrSubject?: string;
+  documentUrl?: string;
+  notes?: string;
+  status: VerificationStatus;
+  reviewerId?: string;
+  reviewerName?: string;
+  reviewedAt?: string;
+  rejectionReason?: string;
+  createdAt: string;
+  updatedAt?: string;
+  auditTrail: VerificationStatusHistory[];
+}
+
+export interface VerificationRequestStats {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+}
+
+export interface CertificateVerificationResult {
+  valid: boolean;
+  status: "VALID" | "REVOKED" | "NOT_FOUND" | "ERROR";
+  certificateId: string;
+  recipientName?: string;
+  assessmentTitle?: string;
+  subject?: string;
+  issueDate?: string;
+  verificationTimestamp?: string;
+  message: string;
+}
+

@@ -182,22 +182,32 @@ export default function CertificatePreviewPage({ params }: CertificatePreviewPag
           </div>
         </div>
 
-        <button
-          onClick={handleDownloadPDF}
-          disabled={downloading}
-          className="bg-[#84117C] hover:bg-[#6c0e66] disabled:opacity-55 text-white font-bold text-xs py-3 px-6 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all w-full sm:w-auto uppercase"
-        >
-          {downloading ? (
-            <>
-              <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Generating PDF...
-            </>
-          ) : (
-            <>
-              <Download size={14} /> Download PDF
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            onClick={() => router.push(`/verification?certId=${encodeURIComponent(certificate.id)}`)}
+            className="border border-emerald-600/30 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 font-bold text-xs py-3 px-5 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-all w-full sm:w-auto uppercase"
+          >
+            <ShieldCheck size={16} className="text-emerald-600" />
+            Verify Authenticity
+          </button>
+
+          <button
+            onClick={handleDownloadPDF}
+            disabled={downloading}
+            className="bg-[#84117C] hover:bg-[#6c0e66] disabled:opacity-55 text-white font-bold text-xs py-3 px-6 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all w-full sm:w-auto uppercase"
+          >
+            {downloading ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Generating PDF...
+              </>
+            ) : (
+              <>
+                <Download size={14} /> Download PDF
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Main Preview Container */}
@@ -258,6 +268,16 @@ export default function CertificatePreviewPage({ params }: CertificatePreviewPag
             <div>
               <span className="text-[10px] text-text-muted font-bold block uppercase tracking-wider">Verification ID</span>
               <span className="text-[10px] text-zinc-400 font-mono block mt-1 uppercase break-all select-all font-semibold">{certificate.id}</span>
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={() => router.push(`/verification?certId=${encodeURIComponent(certificate.id)}`)}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+              >
+                <ShieldCheck size={14} />
+                Verify on Public Portal
+              </button>
             </div>
           </div>
         </div>

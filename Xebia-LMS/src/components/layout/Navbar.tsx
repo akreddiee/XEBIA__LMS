@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useApp } from "../../lib/context";
-import { Menu, Bell, Search, Settings } from "lucide-react";
+import { Menu, Search, Settings } from "lucide-react";
+import NotificationPopover from "../common/NotificationPopover";
 
 interface NavbarProps {
   onMenuToggle: () => void;
@@ -40,11 +41,8 @@ export default function Navbar({ onMenuToggle, collapsed }: NavbarProps) {
 
       {/* Right side Profile controls */}
       <div className="flex items-center gap-4">
-        {/* Mock Notification bell */}
-        <button className="relative p-2 rounded-xl text-text-muted hover:bg-[#F7F8FC] hover:text-primary transition-all">
-          <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cta" />
-        </button>
+        {/* Interactive Notification Bell */}
+        <NotificationPopover />
 
         <button className="p-2 rounded-xl text-text-muted hover:bg-[#F7F8FC] hover:text-primary transition-all">
           <Settings size={20} />

@@ -9,6 +9,7 @@ import StatusBadge from "../../components/common/StatusBadge";
 import { useGetCourses } from "../../hooks/useCourses";
 import { useGetCategories } from "../../hooks/useCategories";
 import { useGetLearnerCredentials } from "../../hooks/useLearnerCredentials";
+import { apiService } from "../../lib/apiService";
 import useToast from "../../hooks/useToast";
 import {
   Tag,
@@ -43,6 +44,7 @@ export default function AdminDashboardPage() {
     pendingApprovals: 3,
     completions: 1450,
   });
+  const [verificationStats, setVerificationStats] = useState({ total: 4, pending: 2 });
 
   const [pendingApprovalsList, setPendingApprovalsList] = useState([
     { id: "appr-1", title: "Kubernetes Pod Deployment Tutorial Video", course: "Kubernetes in Production", author: "DevOps Architect", type: "video" },
@@ -74,6 +76,10 @@ export default function AdminDashboardPage() {
         pendingApprovals: pendingApprovalsList.length,
         completions: 1450,
       });
+
+      apiService.getVerificationStats("admin")
+        .then((s) => setVerificationStats(s))
+        .catch(() => {});
     }
   }, [categories, courses, learnerCredentials, pendingApprovalsList]);
 
@@ -118,7 +124,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         <MetricCard
           title="Total Categories"
           value={counts.categories}
@@ -151,6 +157,16 @@ export default function AdminDashboardPage() {
           description="Total learning asset blocks"
           gradientScheme="primary"
         />
+        <Link href="/admin/verification" className="block">
+          <MetricCard
+            title="Verification Center"
+            value={verificationStats?.pending ?? 2}
+            icon={ShieldCheck}
+            trend={`${verificationStats?.total ?? 4} total requests`}
+            description="Pending credential audits"
+            gradientScheme="accent"
+          />
+        </Link>
       </div>
 
       {/* Core Grid layout */}
@@ -325,7 +341,18 @@ export default function AdminDashboardPage() {
                     <span className="text-[10px] text-text-muted block">Provision IAM learner logins</span>
                   </div>
                 </div>
-                <ShieldCheck className="w-4 h-4 text-foreground/30 group-hover:text-primary transition-colors" />
+                <ArrowRight className="w-4 h-4 text-foreground/30 group-hover:text-primary transition-colors" />
+              </Link>
+
+              <Link href="/admin/verification" className="flex items-center justify-between p-3 border border-primary/30 bg-primary/[0.02] hover:border-primary hover:bg-primary/5 rounded-xl transition-all group">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="w-5 h-5 text-primary group-hover:scale-105 transition-transform" />
+                  <div>
+                    <span className="text-xs font-bold text-foreground block">Verification Center</span>
+                    <span className="text-[10px] text-text-muted block">Audit requests & credential approvals</span>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-foreground/30 group-hover:text-primary transition-colors" />
               </Link>
             </CardBody>
           </Card>

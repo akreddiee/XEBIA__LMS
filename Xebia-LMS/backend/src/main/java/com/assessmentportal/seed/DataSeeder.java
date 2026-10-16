@@ -21,18 +21,27 @@ public class DataSeeder implements CommandLineRunner {
     private final AssessmentRepository assessmentRepository;
     private final SubmissionRepository submissionRepository;
     private final MaterialRepository materialRepository;
+    private final NotificationRepository notificationRepository;
+    private final CertificateRepository certificateRepository;
+    private final VerificationRequestRepository verificationRequestRepository;
 
     public DataSeeder(
             UserRepository userRepository,
             ClassInfoRepository classInfoRepository,
             AssessmentRepository assessmentRepository,
             SubmissionRepository submissionRepository,
-            MaterialRepository materialRepository) {
+            MaterialRepository materialRepository,
+            NotificationRepository notificationRepository,
+            CertificateRepository certificateRepository,
+            VerificationRequestRepository verificationRequestRepository) {
         this.userRepository = userRepository;
         this.classInfoRepository = classInfoRepository;
         this.assessmentRepository = assessmentRepository;
         this.submissionRepository = submissionRepository;
         this.materialRepository = materialRepository;
+        this.notificationRepository = notificationRepository;
+        this.certificateRepository = certificateRepository;
+        this.verificationRequestRepository = verificationRequestRepository;
     }
 
     private void createUploadDirAndDummyFiles() {
@@ -100,9 +109,21 @@ public class DataSeeder implements CommandLineRunner {
                 seedAssessments();
                 seedSubmissions();
                 seedMaterials();
+                seedNotifications();
+                seedCertificates();
+                seedVerificationRequests();
                 System.out.println("[DataSeeder] Seeding complete.");
             } else {
-                System.out.println("[DataSeeder] MongoDB already contains user data. Skipping re-seeding to prevent data loss.");
+                System.out.println("[DataSeeder] MongoDB already contains user data. Checking notification & verification seeding...");
+                if (notificationRepository.count() == 0) {
+                    seedNotifications();
+                }
+                if (certificateRepository.count() == 0) {
+                    seedCertificates();
+                }
+                if (verificationRequestRepository.count() == 0) {
+                    seedVerificationRequests();
+                }
             }
         } catch (Exception e) {
             System.err.println("[DataSeeder] WARNING: MongoDB is offline or connection timed out. MongoDB features will be unavailable: " + e.getMessage());
@@ -365,5 +386,298 @@ public class DataSeeder implements CommandLineRunner {
                 "nextjs15_cheatsheet.pdf", "850 KB",
                 "/api/files/preview/nextjs15_cheatsheet.pdf", "Shan Ali",
                 now.minus(8, ChronoUnit.DAYS).toString()));
+    }
+
+    private void seedNotifications() {
+        Instant now = Instant.now();
+
+        List<Notification> items = Arrays.asList(
+                new Notification(
+                        "notif-1",
+                        null,
+                        "learner",
+                        "Upcoming Assessment Deadline",
+                        "UI/UX Design Principles Quiz deadline is approaching in 24 hours. Complete your submission soon.",
+                        "ASSESSMENTS",
+                        "URGENT",
+                        false,
+                        "/assessments",
+                        now.minus(30, ChronoUnit.MINUTES).toString()
+                ),
+                new Notification(
+                        "notif-2",
+                        null,
+                        "learner",
+                        "Assessment Scorecard Published",
+                        "Your evaluation for 'Spring Boot Fundamentals Quiz' is available. You achieved 90% (Passed with Distinction).",
+                        "GRADES",
+                        "SUCCESS",
+                        false,
+                        "/marks",
+                        now.minus(2, ChronoUnit.HOURS).toString()
+                ),
+                new Notification(
+                        "notif-3",
+                        null,
+                        "learner",
+                        "Certificate Issued",
+                        "Congratulations! An academic certificate has been awarded for Spring Boot Fundamentals.",
+                        "CERTIFICATES",
+                        "SUCCESS",
+                        false,
+                        "/certificates",
+                        now.minus(6, ChronoUnit.HOURS).toString()
+                ),
+                new Notification(
+                        "notif-4",
+                        null,
+                        "learner",
+                        "Upcoming Event: Cloud Architecture Masterclass",
+                        "Registration confirmed. The session starts tomorrow at 10:00 AM IST via Zoom.",
+                        "EVENTS",
+                        "INFO",
+                        true,
+                        "/events",
+                        now.minus(24, ChronoUnit.HOURS).toString()
+                ),
+                new Notification(
+                        "notif-5",
+                        null,
+                        "learner",
+                        "New Learning Material Uploaded",
+                        "Instructor Shan Ali added 'React 19 Server Components Cheatsheet.pdf' to your batch materials.",
+                        "COURSES",
+                        "INFO",
+                        true,
+                        "/materials",
+                        now.minus(48, ChronoUnit.HOURS).toString()
+                ),
+                new Notification(
+                        "notif-6",
+                        null,
+                        "admin",
+                        "Verification Request Awaiting Review",
+                        "Learner credentials verification requested for consultant Flores Juanita (Batch A).",
+                        "VERIFICATION",
+                        "WARNING",
+                        false,
+                        "/learners",
+                        now.minus(45, ChronoUnit.MINUTES).toString()
+                ),
+                new Notification(
+                        "notif-7",
+                        null,
+                        "teacher",
+                        "New Submissions Ready for Evaluation",
+                        "5 new learner submissions are waiting for grading on 'Front-end Development Project'.",
+                        "ASSESSMENTS",
+                        "WARNING",
+                        false,
+                        "/submissions",
+                        now.minus(90, ChronoUnit.MINUTES).toString()
+                ),
+                new Notification(
+                        "notif-8",
+                        null,
+                        "all",
+                        "Portal Maintenance Notice",
+                        "Unified LMS platform scheduled telemetry indexing on Sunday at 02:00 AM IST.",
+                        "GENERAL",
+                        "INFO",
+                        true,
+                        "/dashboard",
+                        now.minus(72, ChronoUnit.HOURS).toString()
+                )
+        );
+
+        notificationRepository.saveAll(items);
+        System.out.println("[DataSeeder] Seeded " + items.size() + " demo notifications.");
+    }
+
+    private void seedCertificates() {
+        if (certificateRepository.count() > 0) return;
+
+        Instant now = Instant.now();
+        List<Certificate> certs = Arrays.asList(
+                new Certificate(
+                        "cert-uiux-2026-001",
+                        "u-learner-1",
+                        "Alex Rivera",
+                        "a-1",
+                        "UI/UX Design Principles Quiz",
+                        "UI/UX Design",
+                        90.0,
+                        27,
+                        30,
+                        now.minus(15, ChronoUnit.DAYS).toString().substring(0, 10),
+                        1,
+                        "/api/certificates/cert-uiux-2026-001/download",
+                        "Active"
+                ),
+                new Certificate(
+                        "cert-react-2026-002",
+                        "u-learner-2",
+                        "Sara Connor",
+                        "a-2",
+                        "React Components & State Written Assessment",
+                        "Front-end Development",
+                        85.0,
+                        17,
+                        20,
+                        now.minus(7, ChronoUnit.DAYS).toString().substring(0, 10),
+                        0,
+                        "/api/certificates/cert-react-2026-002/download",
+                        "Active"
+                ),
+                new Certificate(
+                        "cert-revoked-demo-003",
+                        "u-learner-3",
+                        "Marcus Vance",
+                        "a-1",
+                        "UI/UX Design Principles Quiz",
+                        "UI/UX Design",
+                        75.0,
+                        22,
+                        30,
+                        now.minus(40, ChronoUnit.DAYS).toString().substring(0, 10),
+                        2,
+                        "/api/certificates/cert-revoked-demo-003/download",
+                        "REVOKED"
+                )
+        );
+
+        certificateRepository.saveAll(certs);
+        System.out.println("[DataSeeder] Seeded " + certs.size() + " demo certificates.");
+    }
+
+    private void seedVerificationRequests() {
+        if (verificationRequestRepository.count() > 0) return;
+
+        Instant now = Instant.now();
+
+        // 1. Pending Learner Credential Verification
+        VerificationRequest req1 = VerificationRequest.builder()
+                .id("VR-1001")
+                .requestType("LEARNER_CREDENTIAL")
+                .certificateId(null)
+                .requesterId("u-learner-1")
+                .requesterName("Alex Rivera")
+                .requesterEmail("alex.rivera@xebia.com")
+                .requesterRole("learner")
+                .targetCourseOrSubject("UI/UX Design Masterclass")
+                .status("PENDING")
+                .notes("Verification requested for onboarding enterprise client consulting project.")
+                .createdAt(now.minus(2, ChronoUnit.DAYS).toString())
+                .updatedAt(now.minus(2, ChronoUnit.DAYS).toString())
+                .auditTrail(new ArrayList<>(Collections.singletonList(
+                        VerificationStatusHistory.builder()
+                                .timestamp(now.minus(2, ChronoUnit.DAYS).toString())
+                                .changedBy("Alex Rivera")
+                                .fromStatus(null)
+                                .toStatus("PENDING")
+                                .remarks("Request submitted by learner.")
+                                .build()
+                )))
+                .build();
+
+        // 2. Pending Certificate Verification
+        VerificationRequest req2 = VerificationRequest.builder()
+                .id("VR-1002")
+                .requestType("CERTIFICATE_VERIFICATION")
+                .certificateId("cert-uiux-2026-001")
+                .requesterId("u-learner-1")
+                .requesterName("Alex Rivera")
+                .requesterEmail("alex.rivera@xebia.com")
+                .requesterRole("learner")
+                .targetCourseOrSubject("UI/UX Design Principles")
+                .status("PENDING")
+                .notes("External partner credential audit for UI/UX Design certification.")
+                .createdAt(now.minus(18, ChronoUnit.HOURS).toString())
+                .updatedAt(now.minus(18, ChronoUnit.HOURS).toString())
+                .auditTrail(new ArrayList<>(Collections.singletonList(
+                        VerificationStatusHistory.builder()
+                                .timestamp(now.minus(18, ChronoUnit.HOURS).toString())
+                                .changedBy("Alex Rivera")
+                                .fromStatus(null)
+                                .toStatus("PENDING")
+                                .remarks("Verification request initiated.")
+                                .build()
+                )))
+                .build();
+
+        // 3. Approved Request
+        VerificationRequest req3 = VerificationRequest.builder()
+                .id("VR-1003")
+                .requestType("CERTIFICATE_VERIFICATION")
+                .certificateId("cert-react-2026-002")
+                .requesterId("u-learner-2")
+                .requesterName("Sara Connor")
+                .requesterEmail("sara.connor@xebia.com")
+                .requesterRole("learner")
+                .targetCourseOrSubject("React Components & State")
+                .status("APPROVED")
+                .reviewerId("u-admin-1")
+                .reviewerName("Enterprise Administrator")
+                .reviewedAt(now.minus(3, ChronoUnit.DAYS).toString())
+                .notes("Annual accreditation check for Frontend React competency.")
+                .createdAt(now.minus(4, ChronoUnit.DAYS).toString())
+                .updatedAt(now.minus(3, ChronoUnit.DAYS).toString())
+                .auditTrail(new ArrayList<>(Arrays.asList(
+                        VerificationStatusHistory.builder()
+                                .timestamp(now.minus(4, ChronoUnit.DAYS).toString())
+                                .changedBy("Sara Connor")
+                                .fromStatus(null)
+                                .toStatus("PENDING")
+                                .remarks("Submitted for annual compliance review.")
+                                .build(),
+                        VerificationStatusHistory.builder()
+                                .timestamp(now.minus(3, ChronoUnit.DAYS).toString())
+                                .changedBy("Enterprise Administrator")
+                                .fromStatus("PENDING")
+                                .toStatus("APPROVED")
+                                .remarks("Confirmed against Xebia assessment ledger and verified passing marks.")
+                                .build()
+                )))
+                .build();
+
+        // 4. Rejected Request
+        VerificationRequest req4 = VerificationRequest.builder()
+                .id("VR-1004")
+                .requestType("COURSE_EXEMPTION")
+                .certificateId("cert-revoked-demo-003")
+                .requesterId("u-learner-3")
+                .requesterName("Marcus Vance")
+                .requesterEmail("marcus.vance@xebia.com")
+                .requesterRole("learner")
+                .targetCourseOrSubject("UI/UX Design Principles Quiz")
+                .status("REJECTED")
+                .rejectionReason("The associated certificate record was revoked due to duplicate evaluation attempt.")
+                .reviewerId("u-admin-1")
+                .reviewerName("Enterprise Administrator")
+                .reviewedAt(now.minus(5, ChronoUnit.DAYS).toString())
+                .notes("Urgent validation request for client dispatch.")
+                .createdAt(now.minus(6, ChronoUnit.DAYS).toString())
+                .updatedAt(now.minus(5, ChronoUnit.DAYS).toString())
+                .auditTrail(new ArrayList<>(Arrays.asList(
+                        VerificationStatusHistory.builder()
+                                .timestamp(now.minus(6, ChronoUnit.DAYS).toString())
+                                .changedBy("Marcus Vance")
+                                .fromStatus(null)
+                                .toStatus("PENDING")
+                                .remarks("Expedited verification requested.")
+                                .build(),
+                        VerificationStatusHistory.builder()
+                                .timestamp(now.minus(5, ChronoUnit.DAYS).toString())
+                                .changedBy("Enterprise Administrator")
+                                .fromStatus("PENDING")
+                                .toStatus("REJECTED")
+                                .remarks("Rejected: The associated certificate record was revoked due to duplicate evaluation attempt.")
+                                .build()
+                )))
+                .build();
+
+        List<VerificationRequest> requests = Arrays.asList(req1, req2, req3, req4);
+        verificationRequestRepository.saveAll(requests);
+        System.out.println("[DataSeeder] Seeded " + requests.size() + " demo verification requests.");
     }
 }

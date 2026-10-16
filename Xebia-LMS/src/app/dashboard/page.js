@@ -98,6 +98,27 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Verification & Credential Hub Banner */}
+      <div className="bg-white border border-border rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-sm font-extrabold text-foreground">Certificate Verification Center</h3>
+            <p className="text-xs text-text-muted font-medium mt-0.5">
+              Verify authenticated credentials, check validation status, or submit accreditation inquiries.
+            </p>
+          </div>
+        </div>
+        <Link href="/verification">
+          <Button variant="outline" size="sm" className="whitespace-nowrap">
+            <span>Verify Certificate</span>
+            <ArrowRight className="w-4 h-4 ml-1.5" />
+          </Button>
+        </Link>
+      </div>
+
       {/* 3. Core Grid: Continue Learning vs Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left Column: Continue Learning list */}

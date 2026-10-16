@@ -25,7 +25,9 @@ import {
   FileSpreadsheet,
   Upload,
   FileCheck,
-  User
+  User,
+  Bell,
+  ShieldCheck
 } from "lucide-react";
 import SidebarLogo from "./SidebarLogo";
 import SidebarToggle from "./SidebarToggle";
@@ -36,8 +38,8 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
 
   const { data: session } = useSession();
   
-  const userRole = session?.user?.role || "learner";
-  const userName = session?.user?.name || "Consultant";
+  const userRole = session?.user?.role || (typeof window !== "undefined" && typeof localStorage !== "undefined" && JSON.parse(localStorage.getItem("current_user") || "null")?.role) || "learner";
+  const userName = session?.user?.name || (typeof window !== "undefined" && typeof localStorage !== "undefined" && JSON.parse(localStorage.getItem("current_user") || "null")?.name) || "Consultant";
 
   const learnerLinks = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -48,13 +50,17 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "My Assessments", href: "/assessments", icon: FileSpreadsheet },
     { name: "Events", href: "/events", icon: Calendar },
     { name: "My Certificates", href: "/certificates", icon: Award },
+    { name: "Verify Certificate", href: "/verification", icon: ShieldCheck },
     { name: "Marks", href: "/marks", icon: FileCheck },
     { name: "Deadlines", href: "/deadlines", icon: Calendar },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Profile", href: "/profile", icon: User },
   ];
 
   const adminLinks = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Admin Console", href: "/admin", icon: Layers },
+    { name: "Verification Center", href: "/admin/verification", icon: ShieldCheck },
     { name: "Categories", href: "/admin/categories", icon: Tag },
     { name: "Courses", href: "/admin/courses", icon: BookOpen },
     { name: "Modules", href: "/admin/modules", icon: FolderKanban },
@@ -68,6 +74,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "Events", href: "/admin/events", icon: Calendar },
     { name: "Batches", href: "/classes", icon: Layers },
     { name: "Deadlines", href: "/deadlines", icon: Calendar },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
     { name: "Profile", href: "/profile", icon: User },
   ];
@@ -78,10 +85,13 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "Learners", href: "/learners", icon: Users },
     { name: "Assessments", href: "/assessments", icon: FileSpreadsheet },
     { name: "Submissions", href: "/submissions", icon: FolderKanban },
+    { name: "Verification Center", href: "/admin/verification", icon: ShieldCheck },
+    { name: "Verify Certificate", href: "/verification", icon: ShieldCheck },
     { name: "Marks", href: "/marks", icon: FileCheck },
     { name: "Materials", href: "/materials", icon: Upload },
     { name: "Events", href: "/events", icon: Calendar },
     { name: "Deadlines", href: "/deadlines", icon: Calendar },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Profile", href: "/profile", icon: User },
   ];
 

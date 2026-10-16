@@ -5,7 +5,7 @@ import { useApp } from "../../lib/context";
 import { Certificate } from "../../types";
 import { apiService } from "../../lib/apiService";
 import { useRouter } from "next/navigation";
-import { Award, Download, Eye, Calendar, Sparkles } from "lucide-react";
+import { Award, Download, Eye, Calendar, Sparkles, ShieldCheck } from "lucide-react";
 
 export default function CertificatesPage() {
   const { currentUser } = useApp();
@@ -44,11 +44,20 @@ export default function CertificatesPage() {
   return (
     <div className="space-y-6">
       {/* Header section */}
-      <div>
-        <h1 className="text-2xl font-black text-foreground">My Certificates</h1>
-        <p className="text-xs text-text-muted font-semibold mt-1">
-          View, preview, and download your earned academic accomplishments and professional certificates.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-foreground">My Certificates</h1>
+          <p className="text-xs text-text-muted font-semibold mt-1">
+            View, preview, and download your earned academic accomplishments and professional certificates.
+          </p>
+        </div>
+        <button
+          onClick={() => router.push("/verification")}
+          className="inline-flex items-center gap-1.5 px-4 py-2 border border-border bg-white hover:bg-gray-50 text-foreground text-xs font-bold rounded-xl shadow-2xs transition-colors cursor-pointer self-start sm:self-auto"
+        >
+          <ShieldCheck size={16} className="text-primary" />
+          <span>Verification Center</span>
+        </button>
       </div>
 
       {/* Accomplishment stats banner */}
@@ -133,18 +142,26 @@ export default function CertificatesPage() {
               </div>
 
               {/* Actions row */}
-              <div className="border-t border-border/50 pt-4 mt-6 flex gap-3 font-sans">
+              <div className="border-t border-border/50 pt-4 mt-6 flex flex-wrap gap-2.5 font-sans">
                 <button
                   onClick={() => router.push(`/certificates/${cert.id}`)}
-                  className="flex-1 bg-accent hover:bg-accent-dark text-white font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all uppercase"
+                  className="flex-1 min-w-[120px] bg-accent hover:bg-accent-dark text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all uppercase"
                 >
-                  <Eye size={14} /> View Certificate
+                  <Eye size={14} /> View
                 </button>
                 <button
                   onClick={() => router.push(`/certificates/${cert.id}`)}
-                  className="flex-1 bg-[#84117C] hover:bg-[#6c0e66] text-white font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all text-center uppercase"
+                  className="flex-1 min-w-[120px] bg-[#84117C] hover:bg-[#6c0e66] text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all text-center uppercase"
                 >
-                  <Download size={14} /> Download PDF
+                  <Download size={14} /> Download
+                </button>
+                <button
+                  onClick={() => router.push(`/verification?certId=${encodeURIComponent(cert.id)}`)}
+                  className="px-3 py-2.5 border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                  title="Verify authenticity in Verification Center"
+                >
+                  <ShieldCheck size={14} />
+                  <span>Verify</span>
                 </button>
               </div>
             </div>

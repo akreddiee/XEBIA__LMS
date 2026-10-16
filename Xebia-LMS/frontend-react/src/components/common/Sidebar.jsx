@@ -14,7 +14,9 @@ import {
   UserPlus,
   BarChart3,
   Shield,
-  Settings
+  Settings,
+  ShieldCheck,
+  Bell
 } from "lucide-react";
 import SidebarLogo from "./SidebarLogo";
 import SidebarToggle from "./SidebarToggle";
@@ -33,10 +35,13 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Categories", href: "/categories", icon: Tag },
     { name: "All Courses", href: "/courses", icon: BookOpen },
+    { name: "Verify Certificate", href: "/verification", icon: ShieldCheck },
+    { name: "Notifications", href: "/notifications", icon: Bell },
   ];
 
   const adminLinks = [
     { name: "Admin Dashboard", href: "/admin", icon: Layers },
+    { name: "Verification Center", href: "/admin/verification", icon: ShieldCheck },
     { name: "Manage Categories", href: "/admin/categories", icon: Tag },
     { name: "Manage Courses", href: "/admin/courses", icon: BookOpen },
     { name: "Manage Modules", href: "/admin/modules", icon: FolderKanban },
@@ -46,6 +51,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
     { name: "Roles & Permissions", href: "/admin/permissions", icon: Shield },
     { name: "Settings", href: "/admin/settings", icon: Settings },
+    { name: "Notifications", href: "/notifications", icon: Bell },
   ];
 
   const isActive = (href) => {

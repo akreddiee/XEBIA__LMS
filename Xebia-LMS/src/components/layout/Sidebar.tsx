@@ -17,7 +17,9 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Award
+  Award,
+  ShieldCheck,
+  Bell
 } from "lucide-react";
 
 interface SidebarProps {
@@ -40,10 +42,13 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "Learners", href: "/learners", icon: Users },
     { name: "Assessments", href: "/assessments", icon: FileSpreadsheet },
     { name: "Submissions", href: "/submissions", icon: FolderKanban },
+    { name: "Verification Center", href: "/admin/verification", icon: ShieldCheck },
+    { name: "Verify Certificate", href: "/verification", icon: ShieldCheck },
     { name: "Marks", href: "/marks", icon: FileCheck },
     { name: "Materials", href: "/materials", icon: Upload },
     { name: "Events", href: "/events", icon: Calendar },
     { name: "Deadlines", href: "/deadlines", icon: Calendar },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Profile", href: "/profile", icon: User }
   ];
 
@@ -53,13 +58,15 @@ export default function Sidebar({ isOpen, onClose, collapsed, onCollapseToggle }
     { name: "My Assessments", href: "/assessments", icon: FileSpreadsheet },
     { name: "Events", href: "/events", icon: Calendar },
     { name: "My Certificates", href: "/certificates", icon: Award },
+    { name: "Verify Certificate", href: "/verification", icon: ShieldCheck },
     { name: "Marks", href: "/marks", icon: FileCheck },
     { name: "Materials", href: "/materials", icon: Upload },
     { name: "Deadlines", href: "/deadlines", icon: Calendar },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Profile", href: "/profile", icon: User }
   ];
 
-  const links = userRole === "teacher" ? teacherLinks : learnerLinks;
+  const links = userRole === "teacher" || userRole === "admin" ? teacherLinks : learnerLinks;
 
   const handleLogout = () => {
     logout();

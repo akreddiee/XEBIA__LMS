@@ -2,11 +2,16 @@
 const nextConfig = {
   output: "standalone",
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+    const rawBackendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
+    const backendUrl = rawBackendUrl.replace(/\/+$/, "").endsWith("/api")
+      ? rawBackendUrl.replace(/\/+$/, "")
+      : `${rawBackendUrl.replace(/\/+$/, "")}/api`;
+
     const endpoints = [
       "classes", "assessments", "submissions", "materials", "certificates", 
       "batches", "upload", "dashboard", "courses", "categories", "modules", 
-      "submodules", "contents", "content", "iam", "analytics", "files", "events"
+      "submodules", "contents", "content", "iam", "analytics", "files", "events",
+      "notifications", "verification", "auth"
     ];
     
     const rewrites = [];

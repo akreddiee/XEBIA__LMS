@@ -32,6 +32,17 @@ public class EventController {
         this.userRepository = userRepository;
     }
 
+    private static Map<String, Object> mapOf(String k1, Object v1) {
+        return Collections.singletonMap(k1, v1);
+    }
+
+    private static Map<String, Object> mapOf(String k1, Object v1, String k2, Object v2) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        return map;
+    }
+
     private Instant parseDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;
         try {
@@ -99,7 +110,7 @@ public class EventController {
     public ResponseEntity<?> createEvent(@RequestBody Event event, @RequestParam(required = false) String userId) {
         String validationError = validateEvent(event);
         if (validationError != null) {
-            return ResponseEntity.badRequest().body(Map.of("error", validationError));
+            return ResponseEntity.badRequest().body(mapOf("error", validationError));
         }
 
         if (event.getStatus() == null || event.getStatus().isEmpty()) {
@@ -130,7 +141,7 @@ public class EventController {
 
         String validationError = validateEvent(event);
         if (validationError != null) {
-            return ResponseEntity.badRequest().body(Map.of("error", validationError));
+            return ResponseEntity.badRequest().body(mapOf("error", validationError));
         }
 
         Event existing = existingOpt.get();
@@ -169,7 +180,7 @@ public class EventController {
         // Also delete registrations for this event
         List<EventRegistration> registrations = eventRegistrationRepository.findByEventId(id);
         eventRegistrationRepository.deleteAll(registrations);
-        return ResponseEntity.ok(Map.of("message", "Event and all its registrations deleted successfully."));
+        return ResponseEntity.ok(mapOf("message", "Event and all its registrations deleted successfully."));
     }
 
     // POST /api/events/{id}/publish - Publish Event
@@ -345,30 +356,30 @@ public class EventController {
 
         Optional<User> userOpt = userRepository.findById(userId);
         if (!userOpt.isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "User not found."));
+            return ResponseEntity.badRequest().body(mapOf("error", "User not found."));
         }
         User user = userOpt.get();
 
         // 1. Verify event is PUBLISHED
         if (!"PUBLISHED".equalsIgnoreCase(event.getStatus())) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Registration is not open for this event."));
+            return ResponseEntity.badRequest().body(mapOf("error", "Registration is not open for this event."));
         }
 
         // 2. Check if already registered
         Optional<EventRegistration> existingReg = eventRegistrationRepository.findByEventIdAndLearnerId(id, userId);
         if (existingReg.isPresent() && "REGISTERED".equalsIgnoreCase(existingReg.get().getStatus())) {
-            return ResponseEntity.badRequest().body(Map.of("error", "You are already registered for this event."));
+            return ResponseEntity.badRequest().body(mapOf("error", "You are already registered for this event."));
         }
 
         // 3. Capacity check
         if (event.getCurrentRegistrations() >= event.getMaximumCapacity()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "This event is at maximum capacity."));
+            return ResponseEntity.badRequest().body(mapOf("error", "This event is at maximum capacity."));
         }
 
         // 4. Registration deadline check
         Instant deadline = parseDate(event.getRegistrationDeadline());
         if (deadline != null && Instant.now().isAfter(deadline)) {
-            return ResponseEntity.badRequest().body(Map.of("error", "The registration deadline has passed."));
+            return ResponseEntity.badRequest().body(mapOf("error", "The registration deadline has passed."));
         }
 
         // 5. Batch restrictions check for learner
@@ -377,7 +388,7 @@ public class EventController {
                 boolean batchAllowed = event.getBatchRestrictions().stream()
                         .anyMatch(b -> b != null && b.trim().equalsIgnoreCase(user.getBatch().trim()));
                 if (!batchAllowed) {
-                    return ResponseEntity.badRequest().body(Map.of("error", "Your batch (" + user.getBatch() + ") is not eligible for this event."));
+                    return ResponseEntity.badRequest().body(mapOf("error", "Your batch (" + user.getBatch() + ") is not eligible for this event."));
                 }
             }
         }
@@ -403,7 +414,7 @@ public class EventController {
         event.setCurrentRegistrations((int) activeCount);
         eventRepository.save(event);
 
-        return ResponseEntity.ok(Map.of("message", "Registered successfully!", "event", event));
+        return ResponseEntity.ok(mapOf("message", "Registered successfully!", "event", event));
     }
 
     // DELETE /api/events/{id}/register - Cancel registration
@@ -417,13 +428,13 @@ public class EventController {
 
         Optional<EventRegistration> existingReg = eventRegistrationRepository.findByEventIdAndLearnerId(id, userId);
         if (!existingReg.isPresent() || !"REGISTERED".equalsIgnoreCase(existingReg.get().getStatus())) {
-            return ResponseEntity.badRequest().body(Map.of("error", "No active registration found."));
+            return ResponseEntity.badRequest().body(mapOf("error", "No active registration found."));
         }
 
         // Check if registration deadline has passed (cancellation must be before deadline)
         Instant deadline = parseDate(event.getRegistrationDeadline());
         if (deadline != null && Instant.now().isAfter(deadline)) {
-            return ResponseEntity.badRequest().body(Map.of("error", "You cannot cancel registration after the deadline."));
+            return ResponseEntity.badRequest().body(mapOf("error", "You cannot cancel registration after the deadline."));
         }
 
         EventRegistration registration = existingReg.get();
@@ -435,7 +446,7 @@ public class EventController {
         event.setCurrentRegistrations((int) activeCount);
         eventRepository.save(event);
 
-        return ResponseEntity.ok(Map.of("message", "Registration cancelled successfully.", "event", event));
+        return ResponseEntity.ok(mapOf("message", "Registration cancelled successfully.", "event", event));
     }
 
     // GET /api/events/{id}/registrations - Get registered students for an event (with User details)

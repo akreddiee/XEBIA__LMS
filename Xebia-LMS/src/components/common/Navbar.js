@@ -1,12 +1,15 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Menu, ShieldAlert, Search, Bell } from "lucide-react";
+import { Menu, ShieldAlert, Search } from "lucide-react";
+import NotificationPopover from "./NotificationPopover";
 
 export default function Navbar({ onMenuToggle, isOffline }) {
   const { data: session } = useSession();
-  const user = session?.user;
+  const storedUser = typeof window !== "undefined" && typeof localStorage !== "undefined" ? JSON.parse(localStorage.getItem("current_user") || "null") : null;
+  const user = session?.user || storedUser;
 
   return (
     <header className="sticky top-0 z-30 h-20 bg-white border-b border-border flex items-center justify-between px-6 md:px-8 shadow-xs flex-shrink-0">
@@ -38,11 +41,8 @@ export default function Navbar({ onMenuToggle, isOffline }) {
           <Search className="w-5 h-5" />
         </button>
 
-        {/* Notifications Icon with Badge */}
-        <button className="p-2 rounded-xl hover:bg-gray-100 text-foreground/70 hover:text-foreground relative transition-colors cursor-pointer" aria-label="Notifications">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF6200] rounded-full ring-2 ring-white animate-pulse" />
-        </button>
+        {/* Interactive Notifications Popover */}
+        <NotificationPopover />
 
         {isOffline && (
           <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-black text-amber-800 uppercase tracking-wider">
@@ -52,10 +52,14 @@ export default function Navbar({ onMenuToggle, isOffline }) {
         )}
 
         {user?.role === "admin" && (
-          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-black text-amber-800 uppercase tracking-wider">
+          <Link
+            href="/admin"
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-full text-[10px] font-black text-amber-800 uppercase tracking-wider transition-colors cursor-pointer"
+            title="Open Admin Control Center"
+          >
             <ShieldAlert className="w-3.5 h-3.5" />
             <span>Admin Console</span>
-          </div>
+          </Link>
         )}
 
         <div className="h-8 w-px bg-border hidden md:block" />
